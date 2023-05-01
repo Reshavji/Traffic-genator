@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>JSON File Upload</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    #file-input-label {
+      font-weight: bold;
+      margin-bottom: 0.5em;
+    }
+
+    #start-button {
+      padding: 0.5em;
+      margin-top: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: #2196F3;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+    }
+
+    #start-button:hover {
+      background-color: #0c7cd5;
+    }
+
+    #start-button:active {
+      background-color: #005aa4;
+    }
+  </style>
+</head>
+<body>
+  <h1>JSON File Upload</h1>
+  <label id="file-input-label" for="file-input">Select a JSON file:</label>
+  <input id="file-input" type="file">
+  <button id="start-button">Start</button>
+  
+  <script>
+    const INTERVAL_TIME = 20000;
+    let currentTab = null;
+    let data = null;
+    let index = 0;
+    let isStarted = false;
+
+    const fileInput = document.querySelector('#file-input');
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        const contents = event.target.result;
+        data = JSON.parse(contents);
+      };
+
+      reader.readAsText(file);
+    });
+
+    const startButton = document.querySelector('#start-button');
+    startButton.addEventListener('click', () => {
+      if (!data || data.length === 0) {
+        alert('Please select a JSON file.');
+        return;
+      }
+
+      if (isStarted) {
+        alert('The process is already running.');
+        return;
+      }
+
+      isStarted = true;
+      startButton.disabled = true;
+
+      const firstLink = data[0];
+      currentTab = window.open(firstLink);
+
+      setInterval(() => {
+        const newLink = data[index];
+        const newTab = window.open(newLink);
+
+        if (currentTab) {
+          currentTab.close();
+        }
+
+        currentTab = newTab;
+
+        index++;
+        if (index >= data.length) {
+          index = 0;
+        }
+      }, INTERVAL_TIME);
+    });
+  </script>
+</body>
+</html>
