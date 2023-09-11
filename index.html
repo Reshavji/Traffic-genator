@@ -77,16 +77,14 @@
       function openNextTab() {
         const newLink = data[index];
         if (currentTab) {
-          currentTab.close(); // Attempt to close the previous tab
+          currentTab.close();
         }
-        currentTab = window.open(newLink);
-        index = (index + 1) % data.length; // Cycle through the links
+        currentTab = window.open(newLink, '_blank');
+        index = (index + 1) % data.length;
 
-        // Schedule the next tab opening
         setTimeout(openNextTab, INTERVAL_TIME);
       }
 
-      // Start the tab opening loop
       openNextTab();
     });
   </script>
