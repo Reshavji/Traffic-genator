@@ -62,7 +62,7 @@
     const startButton = document.querySelector('#start-button');
     startButton.addEventListener('click', () => {
       if (!data || data.length === 0) {
-        alert('Please select a JSON file.');
+        alert('Please select a JSON file and wait for it to load.');
         return;
       }
 
@@ -74,24 +74,20 @@
       isStarted = true;
       startButton.disabled = true;
 
-      const firstLink = data[0];
-      currentTab = window.open(firstLink);
-
-      setInterval(() => {
+      function openNextTab() {
         const newLink = data[index];
-        const newTab = window.open(newLink);
-
         if (currentTab) {
-          currentTab.close();
+          currentTab.close(); // Attempt to close the previous tab
         }
+        currentTab = window.open(newLink);
+        index = (index + 1) % data.length; // Cycle through the links
 
-        currentTab = newTab;
+        // Schedule the next tab opening
+        setTimeout(openNextTab, INTERVAL_TIME);
+      }
 
-        index++;
-        if (index >= data.length) {
-          index = 0;
-        }
-      }, INTERVAL_TIME);
+      // Start the tab opening loop
+      openNextTab();
     });
   </script>
 </body>
