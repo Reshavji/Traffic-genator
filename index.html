@@ -40,7 +40,7 @@
   <button id="start-button">Start</button>
   
   <script>
-   const INTERVAL_TIME = 40000;
+const INTERVAL_TIME = 40000;
 let currentTab = null;
 let data = null;
 let index = 0;
@@ -82,12 +82,16 @@ startButton.addEventListener('click', () => {
     const newLink = data[index];
     currentTab = window.open(newLink, '_blank');
     index = (index + 1) % data.length;
-
-    setTimeout(openNextTab, INTERVAL_TIME);
   }
 
-  openNextTab();
+  function delayedTabOpening() {
+    openNextTab();
+    setTimeout(delayedTabOpening, INTERVAL_TIME);
+  }
+
+  delayedTabOpening();
 });
+
 
   </script>
 </body>
