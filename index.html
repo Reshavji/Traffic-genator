@@ -40,53 +40,55 @@
   <button id="start-button">Start</button>
   
   <script>
-    const INTERVAL_TIME = 40000;
-    let currentTab = null;
-    let data = null;
-    let index = 0;
-    let isStarted = false;
+   const INTERVAL_TIME = 40000;
+let currentTab = null;
+let data = null;
+let index = 0;
+let isStarted = false;
 
-    const fileInput = document.querySelector('#file-input');
-    fileInput.addEventListener('change', (event) => {
-      const file = event.target.files[0];
-      const reader = new FileReader();
+const fileInput = document.querySelector('#file-input');
+fileInput.addEventListener('change', (event) => {
+  const file = event.target.files[0];
+  const reader = new FileReader();
 
-      reader.onload = (event) => {
-        const contents = event.target.result;
-        data = JSON.parse(contents);
-      };
+  reader.onload = (event) => {
+    const contents = event.target.result;
+    data = JSON.parse(contents);
+  };
 
-      reader.readAsText(file);
-    });
+  reader.readAsText(file);
+});
 
-    const startButton = document.querySelector('#start-button');
-    startButton.addEventListener('click', () => {
-      if (!data || data.length === 0) {
-        alert('Please select a JSON file and wait for it to load.');
-        return;
-      }
+const startButton = document.querySelector('#start-button');
+startButton.addEventListener('click', () => {
+  if (!data || data.length === 0) {
+    alert('Please select a JSON file and wait for it to load.');
+    return;
+  }
 
-      if (isStarted) {
-        alert('The process is already running.');
-        return;
-      }
+  if (isStarted) {
+    alert('The process is already running.');
+    return;
+  }
 
-      isStarted = true;
-      startButton.disabled = true;
+  isStarted = true;
+  startButton.disabled = true;
 
-      function openNextTab() {
-        const newLink = data[index];
-        if (currentTab) {
-          currentTab.close();
-        }
-        currentTab = window.open(newLink, '_blank');
-        index = (index + 1) % data.length;
+  function openNextTab() {
+    if (currentTab) {
+      currentTab.close();
+    }
 
-        setTimeout(openNextTab, INTERVAL_TIME);
-      }
+    const newLink = data[index];
+    currentTab = window.open(newLink, '_blank');
+    index = (index + 1) % data.length;
 
-      openNextTab();
-    });
+    setTimeout(openNextTab, INTERVAL_TIME);
+  }
+
+  openNextTab();
+});
+
   </script>
 </body>
 </html>
